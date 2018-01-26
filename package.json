@@ -1,0 +1,24 @@
+{
+  "name": "main-site-backend",
+  "version": "1.0.0",
+  "description": "Main site backend",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/Teknack-2018/main-site-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/Teknack-2018/main-site-backend/issues"
+  },
+  "homepage": "https://gitlab.com/Teknack-2018/main-site-backend#README",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "express": "^4.16.2",
+    "mongodb": "^3.0.1"
+  }
+}
