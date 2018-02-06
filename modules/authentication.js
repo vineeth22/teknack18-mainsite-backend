@@ -1,11 +1,13 @@
 'use strict';
 
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://localhost:27017';
+const url = 'mongodb://127.0.0.1:27017';
 const dbName = 'teknack';
 const assert = require('assert');
 const bcrypt = require('bcrypt');
 const saltRounds = 12;
+
+// helper functions
 
 // returns true if username exists
 const usernameValid = username => new Promise((resolve, reject) => {
@@ -46,12 +48,14 @@ const insertUser = user => new Promise((resolve, reject) => {
       ).then(r => {
         assert.equal(1, r.matchedCount);
         assert.equal(1, r.modifiedCount);
-        resolve('User inserted');
+        resolve();
         conn.close();
       }).catch(reject);
     });
   });
 });
+
+// main functions
 
 const register = user => new Promise((resolve, reject) => {
   if (user.code &&
@@ -64,7 +68,7 @@ const register = user => new Promise((resolve, reject) => {
       usernameValid(user.username)])
       .then((result) => {
         if (!result.includes(false)) {
-          insertUser(user).then(resolve).catch(reject);
+          insertUser(user).then(resolve('Registration successful')).catch(reject);
         } else if (result[0] === false) {
           resolve('Passwords do not match');
         } else if (result[1] === false) {
@@ -79,17 +83,48 @@ const register = user => new Promise((resolve, reject) => {
   }
 });
 
+const login = user => new Promise((resolve, reject) => {
+  if (user.username && user.password) {
+    MongoClient.connect(url).then(conn => {
+      const db = conn.db(dbName);
+      db.collection('users').find({ username: user.username }).toArray().then((result) => {
+        if (result.length === 1) {
+          bcrypt.compare(user.password, result[0].password).then((res) => {
+            if (res === true) {
+              resolve('Login Successful');
+            } else {
+              resolve('Username or password incorrect');
+            }
+          }).catch(reject);
+        } else {
+          resolve('Username or password incorrect');
+        }
+        conn.close();
+      })
+        .catch(reject);
+    }).catch(reject);
+  } else {
+    resolve('Incomplete data');
+  }
+});
+
+// testing
+
 const user = {
-  code: 'ASDFJ',
-  username: 'testna',
+  code: 'ASDFK',
+  username: 'testing',
   email: 'asd@asd.com',
-  password: 'qwert',
-  passwordConf: 'qwert'
+  password: 'asdfg',
+  passwordConf: 'asdfg'
 };
 
+// login(user).then((result) => { console.log(result); }).catch((result) => { console.log(result); });
 // insertUser(user).then((result) => { console.log(result); }).catch((result) => { console.log(result); })
-// register(user).then((result) => { console.log(result); }).catch((err) => { console.log(err); });
+//  register(user).then((result) => { console.log(result); }).catch((err) => { console.log(err); });
 
 // promiseall.then((result) => { console.log(result) });
 // usernameExists('testname').then((result) => console.log(result));
 // codeValid('ASDFG').then((result) => console.log(result));
+
+module.exports.register = register;
+module.exports.login = login;
