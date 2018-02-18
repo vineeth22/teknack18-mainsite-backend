@@ -109,7 +109,7 @@ const login = user => new Promise((resolve, reject) => {
 });
 
 // testing
-
+/*
 const user = {
   code: 'ASDFK',
   username: 'testing',
@@ -117,14 +117,17 @@ const user = {
   password: 'asdfg',
   passwordConf: 'asdfg'
 };
+*/
+/*
+login(user).then((result) => {
+  console.log(result); }).catch((result) => { console.log(result); });
+insertUser(user).then((result) => {
+  console.log(result); }).catch((result) => { console.log(result); })
+register(user).then((result) => { console.log(result); }).catch((err) => { console.log(err); });
 
-// login(user).then((result) => { console.log(result); }).catch((result) => { console.log(result); });
-// insertUser(user).then((result) => { console.log(result); }).catch((result) => { console.log(result); })
-//  register(user).then((result) => { console.log(result); }).catch((err) => { console.log(err); });
-
-// promiseall.then((result) => { console.log(result) });
-// usernameExists('testname').then((result) => console.log(result));
-// codeValid('ASDFG').then((result) => console.log(result));
-
+promiseall.then((result) => { console.log(result) });
+usernameExists('testname').then((result) => console.log(result));
+codeValid('ASDFG').then((result) => console.log(result));
+*/
 module.exports.register = register;
 module.exports.login = login;
